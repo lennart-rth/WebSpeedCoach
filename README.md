@@ -5,7 +5,7 @@
 WebSpeedCoach is a lightweight mobile web app that turns your phone into a rowing stroke/speed coach.
 
 **How it works**
-- Open `main.html` in a modern mobile browser and place the phone on your rowing boat (screen up).
+- Open the [web page](https://speedcoach.unstacked.cc/) in a modern mobile browser and place the phone on your rowing boat (screen up).
 - The app uses the phone's GPS and accelerometer to estimate pace, stroke rate (spm), lap time and distance.
 - Use the gear icon to pick Free / Distance / Time interval modes.
 
