@@ -156,20 +156,17 @@ button {
 #alert-text { font-size: 12vw; font-weight: 900; color: var(--active); letter-spacing: 5px; }
 
 @media (orientation: portrait) {
-    #dashboard { grid-template-columns: 1fr; grid-template-rows: repeat(4, 1fr); }
-    .value { font-size: 16dvh; }
-    .label { font-size: 5vh; }
-    .unit { font-size: 6vh; }
+    body { display: none !important; }
 }
 
 @media (orientation: landscape) {
-    .label { font-size: 3.5vh; margin-bottom: 2px; }
-    .value { font-size: 10dvh; }
-    .unit { font-size: 4vh; }
-    #controls { height: 54px; padding: 0 10px; gap: 10px; }
-    #btn-settings { font-size: 24px; }
-    button { padding: 8px 25px; font-size: 18px; }
-    #lap-info { font-size: 20px; }
-    .status-icon { width: 22px; height: 22px; }
-    #alert-text { font-size: 10vw; }
+    .label { font-size: 6.5vh; margin-bottom: 1px; font-weight: 700; }
+    .value { font-size: 18dvh; }
+    .unit { font-size: 7vh; }
+    #controls { height: 60px; padding: 0 10px; gap: 10px; }
+    #btn-settings { font-size: 36px; }
+    button { padding: 14px 40px; font-size: 24px; }
+    #lap-info { font-size: 26px; }
+    .status-icon { width: 28px; height: 28px; }
+    #alert-text { font-size: 16vw; }
 }

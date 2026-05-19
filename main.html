@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, orientation=landscape">
+    <title>Web SpeedCoach</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+    <!-- Interval Notification -->
+    <div id="interval-alert">
+        <div id="alert-text">REST</div>
+    </div>
+
+    <!-- Workout Setup Modal -->
+    <div id="modal-overlay" class="hidden">
+        <div id="setup-card">
+            <h2>Workout Target</h2>
+            <div class="form-group">
+                <label>Workout Mode:</label>
+                <select id="setup-type">
+                    <option value="free">Just Go (Free Row)</option>
+                    <option value="distance">Interval Distance (m)</option>
+                    <option value="time">Interval Time (min)</option>
+                </select>
+            </div>
+            <div class="form-group hidden" id="val-group">
+                <label id="val-label">Target Value:</label>
+                <input type="number" id="setup-val" min="1" step="any" placeholder="e.g. 1000">
+            </div>
+            <button id="btn-save-settings">Save Target</button>
+        </div>
+    </div>
+
+    <div id="dashboard">
+        <div class="metric">
+            <div class="label">Pace / 500m</div>
+            <div class="value" id="val-pace">--:--</div>
+        </div>
+        <div class="metric">
+            <div class="label">Rate</div>
+            <div class="value"><span id="val-spm">0</span><span class="unit">spm</span></div>
+        </div>
+        <div class="metric">
+            <div class="label" id="label-time">Lap Time</div>
+            <div class="value" id="val-time">0:00.0</div>
+        </div>
+        <div class="metric">
+            <div class="label" id="label-dist">Lap Distance</div>
+            <div class="value"><span id="val-dist">0</span><span class="unit">m</span></div>
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="btn-settings" title="Setup Workout">⚙️</button>
+        <div id="lap-info">LAP: 1</div>
+        
+        <div class="status-container">
+            <svg id="icon-accel" class="status-icon" viewBox="0 0 24 24">
+                <path d="M16 6l-2.5 8.5L9.5 4 6 12H2v2h5.5l2-5.5L13.5 20l3.5-12H22v-2h-6z"/>
+            </svg>
+            <svg id="icon-gps" class="status-icon" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+        </div>
+
+        <button id="btn-lap" disabled>Lap</button>
+        <button id="btn-start">Start</button>
+    </div>
+
+    <script type="module" src="./app.js" defer></script>
+</body>
+</html>
