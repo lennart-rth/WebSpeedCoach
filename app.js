@@ -1,6 +1,7 @@
 import { state } from './globals.js';
 import { formatTime, calculateHaversine, initAudio, playBeep, showOverlay } from './utils.js';
 import { initSettings, getSettings } from './settings.js';
+import { StrokeDetector } from './stroke-detector.js';
 
 // --- DOM Elements ---
 const uiPace = document.getElementById('val-pace');
@@ -18,6 +19,9 @@ const iconGps = document.getElementById('icon-gps');
 const iconAccel = document.getElementById('icon-accel');
 
 const alertOverlay = document.getElementById('interval-alert');
+
+// Initialize stroke detector
+const strokeDetector = new StrokeDetector();
 
 // Initialize settings modal handlers
 initSettings();
@@ -115,6 +119,9 @@ function startWorkout() {
     state.lastGpsTime = 0;
     state.lastAccelTime = 0;
     iconGps.classList.remove('error');
+
+    // Reset stroke detector
+    strokeDetector.reset();
 
     state.timerInterval = setInterval(updateTimer, 100);
 
@@ -256,37 +263,22 @@ function handleMotion(event) {
     if (!acc) return;
 
     let x = acc.x || 0, y = acc.y || 0, z = acc.z || 0;
-    let mag = Math.sqrt(x*x + y*y + z*z);
+
+    // Mark accel as active if significant motion
+    const mag = Math.sqrt(x*x + y*y + z*z);
     if (mag > 0.1) state.lastAccelTime = Date.now();
-    if (event.acceleration === null) mag = Math.abs(mag - 9.81);
 
-    const now = Date.now();
-    state.accelBuffer.push({ time: now, val: mag });
-    while (state.accelBuffer.length > 0 && now - state.accelBuffer[0].time > 10000) state.accelBuffer.shift();
-    if (state.accelBuffer.length < 10) return;
+    // Feed into stroke detector
+    const t = Date.now() / 1000; // Convert to seconds
+    strokeDetector.process(t, x, y, z);
 
-    let minMag = Infinity, maxMag = -Infinity;
-    for (let i = 0; i < state.accelBuffer.length; i++) {
-        if (state.accelBuffer[i].val < minMag) minMag = state.accelBuffer[i].val;
-        if (state.accelBuffer[i].val > maxMag) maxMag = state.accelBuffer[i].val;
+    // Update SPM display (only if >= 5 spm to avoid noise)
+    const spm = strokeDetector.getSPM();
+    if (spm >= 5 && spm <= 90) {
+        uiSpm.innerText = spm;
+    } else if (spm === 0) {
+        uiSpm.innerText = "0";
     }
-
-    const threshold = minMag + 0.1 * (maxMag - minMag);
-
-    if (state.previousMag !== null && state.previousMag > threshold && mag <= threshold) {
-        if (now - state.lastStrokeTime > 1000) {
-            if (state.lastStrokeTime > 0) {
-                state.strokeIntervals.push(now - state.lastStrokeTime);
-                if (state.strokeIntervals.length > 3) state.strokeIntervals.shift();
-                const avgInterval = state.strokeIntervals.reduce((a, b) => a + b) / state.strokeIntervals.length;
-                const spm = Math.round(60000 / avgInterval);
-                if (spm >= 15 && spm <= 60) uiSpm.innerText = spm;
-            }
-            state.lastStrokeTime = now;
-        }
-    }
-    state.previousMag = mag;
-    if (now - state.lastStrokeTime > 5000) { uiSpm.innerText = "0"; state.strokeIntervals = []; }
 }
 
 // Wire controls
